@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33529.622
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouterAutoRestarter", "RouterAutoRestarter.csproj", "{04BD792F-4602-4AD5-9F31-72E80D5A9747}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04BD792F-4602-4AD5-9F31-72E80D5A9747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04BD792F-4602-4AD5-9F31-72E80D5A9747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04BD792F-4602-4AD5-9F31-72E80D5A9747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04BD792F-4602-4AD5-9F31-72E80D5A9747}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FBCA0663-BCE0-45B8-AC30-3EFCF8D95625}
+	EndGlobalSection
+EndGlobal
