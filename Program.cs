@@ -17,6 +17,7 @@ namespace RouterAutoRestarter
             double desired_speed = -1;
             string IP_Adress = "";
             string admin_password = "";
+            string model = "";
 
             //Output intruduction
             Console.WriteLine("This application restarts the router so lang that it logs in to the right LTE Tower.");
@@ -25,6 +26,8 @@ namespace RouterAutoRestarter
             Console.WriteLine("\n");
             Console.WriteLine("Please enter your desired speed (1-10): ");
             desired_speed = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Please enter the model:");
+            model = Convert.ToString(Console.ReadLine());
             Console.WriteLine("Please enter the routers IP Address: ");
             IP_Adress = Convert.ToString(Console.ReadLine());
             Console.WriteLine("Please enter the Admin Password: ");
@@ -48,10 +51,10 @@ namespace RouterAutoRestarter
                     }
 
                     //Otherwise restart the router
-                    RestartRouter(IP_Adress, admin_password);
+                    RestartRouter(IP_Adress, admin_password, model);
 
                     //Return to the top of the loop if the router is pinggable
-                    Thread.Sleep(25000);
+                    Thread.Sleep(60000);
                     while (PingIP(IP_Adress) == false)
                     {
                         Thread.Sleep(5000);
@@ -71,7 +74,7 @@ namespace RouterAutoRestarter
             Console.ReadLine();
         }
 
-        static async void RestartRouter(string ip, string admin_password)
+        static async void RestartRouter(string ip, string admin_password, string model)
         {
             //Start restarting the router
             Console.WriteLine("Restart router...");
@@ -94,15 +97,43 @@ namespace RouterAutoRestarter
             });
 
             //Do naviagtion on the page
-            var page = await browser.NewPageAsync();
-            await page.GoToAsync("http://" + ip + "/html/index.html?noredirect");
-            await page.TypeAsync("#login_password", admin_password);
-            await page.EvaluateExpressionAsync("EMUI.LoginObjController.Login(0)");
-            await page.WaitForNavigationAsync();
-            await page.EvaluateExpressionAsync("EMUI.RebootController.rebootExe()");
+            if(model == "1")
+            {
+                var page = await browser.NewPageAsync();
+                await page.GoToAsync("http://" + ip + "/html/index.html?noredirect");
+                await page.TypeAsync("#login_password", admin_password);
+                await page.EvaluateExpressionAsync("EMUI.LoginObjController.Login(0)");
+                await page.WaitForNavigationAsync();
+                await page.EvaluateExpressionAsync("EMUI.RebootController.rebootExe()");
+            }
+            if (model == "2")
+            {
+                //Wait for the page to appear
+                Thread.Sleep(20000);
+
+                var page = await browser.NewPageAsync();
+                await page.GoToAsync("http://" + ip + "/html/home.html");
+                await page.EvaluateExpressionAsync("showloginDialog()");
+                await page.EvaluateExpressionAsync("document.getElementById('password').value = '" + admin_password + "'");
+                await page.EvaluateExpressionAsync("document.getElementById('pop_login').click()");
+
+                //Wait for the login to disappear
+                Thread.Sleep(5000);
+
+                await page.GoToAsync("http://" + ip + "/html/reboot.html");
+
+                //Wait for the website to load
+                Thread.Sleep(5000);
+
+                await page.EvaluateExpressionAsync("do_reboot()");
+                Console.WriteLine("Reboot command send...");
+
+                //Wait, for this router it takes longer to get shutdown
+                Thread.Sleep(10000);
+            }
 
             //Wait before closing the browser
-            Thread.Sleep(5000);
+            Thread.Sleep(10000);
 
             //Close the browser
             await browser.CloseAsync();
